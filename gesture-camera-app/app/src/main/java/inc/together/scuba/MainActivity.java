@@ -1,25 +1,20 @@
 package inc.together.scuba;
 
-import android.Manifest;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraUtils;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.Facing;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -73,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
                         ImageSaveUtils.saveImage(bitmap);
+                        ImageSaveUtils.notifyGallery(MainActivity.this);
                         Log.d("MainActivity", "Image taking finished!");
                     }
                 });

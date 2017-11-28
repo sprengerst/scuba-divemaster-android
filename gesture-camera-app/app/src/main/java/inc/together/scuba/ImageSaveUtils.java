@@ -1,6 +1,8 @@
 package inc.together.scuba;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.util.Log;
 
@@ -13,14 +15,16 @@ import java.io.FileOutputStream;
 
 public class ImageSaveUtils {
 
+    private static final String IMAGE_DIRECTORY = "Pictures/ScubaDiver/";
+
     public static void saveImage(Bitmap finalBitmap) {
 
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root, "Pictures");
-        myDir.mkdirs();
+        File targetDirectory = new File(root, IMAGE_DIRECTORY);
+        targetDirectory.mkdirs();
 
         String fName = "scuba-diver-" + System.currentTimeMillis() + ".jpg";
-        File file = new File(myDir, fName);
+        File file = new File(targetDirectory, fName);
 
         if (file.exists()) {
             file.delete();
@@ -32,10 +36,20 @@ public class ImageSaveUtils {
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
             out.flush();
             out.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public static void notifyGallery(Context context) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File targetDirectory = new File(root, IMAGE_DIRECTORY);
+
+        MediaScannerConnection.scanFile(context,
+                new String[]{targetDirectory.getAbsolutePath()}, null,
+                null);
     }
 
 }
