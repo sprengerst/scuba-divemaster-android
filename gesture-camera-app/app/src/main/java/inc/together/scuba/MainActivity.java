@@ -5,10 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.otaliastudios.cameraview.CameraListener;
@@ -19,6 +21,8 @@ import com.otaliastudios.cameraview.Facing;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private CameraView mCameraView;
+    private ImageView mPreviewImage;
+
     private SensorManager mSensorMgr;
     private Sensor mDefaultAccMeter;
 
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        immersiveFullScreenMode();
+
         setContentView(R.layout.activity_main);
 
 
@@ -60,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mShutterTimer = findViewById(R.id.countdown_textview);
         mShutterTimer.setVisibility(View.GONE);
 
+        mPreviewImage = findViewById(R.id.preview_image);
+        mPreviewImage.setVisibility(View.GONE);
+
         mCameraView.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(byte[] picture) {
@@ -67,9 +77,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 CameraUtils.decodeBitmap(picture, new CameraUtils.BitmapCallback() {
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
-                        ImageSaveUtils.saveImage(bitmap);
-                        ImageSaveUtils.notifyGallery(MainActivity.this);
+                        ImageSaveUtils.saveImage(MainActivity.this, bitmap);
                         Log.d("MainActivity", "Image taking finished!");
+                        mPreviewImage.setImageBitmap(bitmap);
+                        mPreviewImage.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -83,6 +94,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mSensorMgr.registerListener(this, mDefaultAccMeter, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
+    }
+
+    // This work only for android 4.4+
+    private void immersiveFullScreenMode() {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
+
+            final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+
+            // Code below is to handle presses of Volume up or Volume down.
+            // Without this, after pressing volume buttons, the navigation bar will
+            // show up and won't hide
+            final View decorView = getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+
+                        @Override
+                        public void onSystemUiVisibilityChange(int visibility) {
+                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                                decorView.setSystemUiVisibility(flags);
+                            }
+                        }
+                    });
+        }
     }
 
 
