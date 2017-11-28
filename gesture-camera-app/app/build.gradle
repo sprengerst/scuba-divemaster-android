@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "inc.together.scuba"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -25,4 +25,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //https://github.com/natario1/CameraView/blob/master/README.md
+    compile 'com.otaliastudios:cameraview:1.4.1'
+
+    // https://github.com/iwgang/CountdownView
+    compile 'com.github.iwgang:countdownview:2.1.6'
+
+    //  https://github.com/ParkSangGwon/TedPermission
+    compile 'gun0912.ted:tedpermission:2.1.0'
 }
