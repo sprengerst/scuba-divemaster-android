@@ -191,8 +191,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Log.d("MainActivity", "X/Y/Z: " + x + "/" + y + "/" + z);
             Log.d("MainActivity", "LAST X/Y/Z: " + last_x + "/" + last_y + "/" + last_z);
 
-            if (Math.abs(last_z - z) > 2.2F) {
-                Log.d("MainActivity", "Tilt");
+            //if (Math.abs(last_z - z) > 2.2F) => Tilt
+            //else if (Math.abs(last_y-y) > 1.3F) => horizontal shake
+
+            if (Math.abs(last_z - z) <= 1.8F) {
+                Log.d("MainActivity", "Shake orientation: horizontal");
 
                 if (mCameraView.getFacing() == Facing.BACK) {
                     mCameraView.setFacing(Facing.FRONT);
@@ -200,8 +203,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mCameraView.setFacing(Facing.BACK);
                 }
 
-            } else if (Math.abs(last_y-y) > 1.3F){
-                Log.d("MainActivity", "Hforizontal Shake");
+            } else {
+                Log.d("MainActivity", "Shake orientation: vertical");
 
                 mShakeEnabled = false;
                 mShutterTimer.setVisibility(View.VISIBLE);
