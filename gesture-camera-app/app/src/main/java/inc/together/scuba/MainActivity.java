@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private long mShakeTimestamp;
     private int mShakeCount;
+
     float x, y, z;
     float last_x, last_y, last_z;
     private TextView mShutterTimer;
@@ -168,12 +169,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float gY = y / SensorManager.GRAVITY_EARTH;
         float gZ = z / SensorManager.GRAVITY_EARTH;
 
+
         // gForce will be close to 1 when there is no movement.
         float gForce = (float) Math.sqrt(gX * gX + gY * gY + gZ * gZ);
 
 //        Log.d("MainActivity", "Gforce Value: " + gForce);
         if (mShakeEnabled && gForce > SHAKE_THRESHOLD_GRAVITY) {
             final long now = System.currentTimeMillis();
+
 
             // ignore shake events too close to each other (500ms)
             if (mShakeTimestamp + SHAKE_SLOP_TIME_MS > now) {
@@ -183,12 +186,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mShakeTimestamp = now;
             mShakeCount++;
 
+
             Log.d("MainActivity", "Shake detected: " + mShakeCount);
             Log.d("MainActivity", "X/Y/Z: " + x + "/" + y + "/" + z);
             Log.d("MainActivity", "LAST X/Y/Z: " + last_x + "/" + last_y + "/" + last_z);
 
-            if (Math.abs(last_z - z) <= 1.8F) {
-                Log.d("MainActivity", "Shake orientation: horizontal");
+            if (Math.abs(last_z - z) > 2.2F) {
+                Log.d("MainActivity", "Tilt");
 
                 if (mCameraView.getFacing() == Facing.BACK) {
                     mCameraView.setFacing(Facing.FRONT);
@@ -196,8 +200,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mCameraView.setFacing(Facing.BACK);
                 }
 
-            } else {
-                Log.d("MainActivity", "Shake orientation: vertical");
+            } else if (Math.abs(last_y-y) > 1.3F){
+                Log.d("MainActivity", "Hforizontal Shake");
 
                 mShakeEnabled = false;
                 mShutterTimer.setVisibility(View.VISIBLE);
