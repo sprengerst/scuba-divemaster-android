@@ -1,5 +1,6 @@
 package inc.together.scuba;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,10 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraUtils;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.Facing;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -49,19 +54,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
 
-//        TedPermission.with(this)
-//                .setPermissionListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted() {}
-//
-//                    @Override
-//                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-//                        MainActivity.this.finish();
-//                    }
-//                })
-//                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-//                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-//                .check();
+        TedPermission.with(this)
+                .setPermissionListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {}
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                        MainActivity.this.finish();
+                    }
+                })
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
 
 
         mCameraView = findViewById(R.id.camera);
@@ -194,17 +199,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //if (Math.abs(last_z - z) > 2.2F) => Tilt
             //else if (Math.abs(last_y-y) > 1.3F) => horizontal shake
 
-            if (Math.abs(last_z - z) <= 1.8F) {
+            if ( Math.abs(last_y-y) > 3.2F){
                 Log.d("MainActivity", "Shake orientation: horizontal");
-
-                if (mCameraView.getFacing() == Facing.BACK) {
-                    mCameraView.setFacing(Facing.FRONT);
-                } else {
-                    mCameraView.setFacing(Facing.BACK);
-                }
-
-            } else {
-                Log.d("MainActivity", "Shake orientation: vertical");
 
                 mShakeEnabled = false;
                 mShutterTimer.setVisibility(View.VISIBLE);
@@ -220,6 +216,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
 
                 countDownAnimation.start();
+            }else if (Math.abs(last_z - z) > 3.2F)  {
+                Log.d("MainActivity", "Shake orientation: vertical");
+
+                if (mCameraView.getFacing() == Facing.BACK) {
+                    mCameraView.setFacing(Facing.FRONT);
+                } else {
+                    mCameraView.setFacing(Facing.BACK);
+                }
+
             }
 
         }

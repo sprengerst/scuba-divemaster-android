@@ -33,7 +33,7 @@ public class ImageSaveUtils {
             takenFile.delete();
         }
 
-        Log.i("LOAD", root + fName);
+        Log.i("LOAD", targetDirectory.getAbsolutePath() + "/" + fName);
         try {
             FileOutputStream out = new FileOutputStream(takenFile);
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -43,8 +43,8 @@ public class ImageSaveUtils {
             // Meta Data otherwise image won't show up
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, fName);
-            values.put(MediaStore.Images.Media.DESCRIPTION, fName+" is taken from scuba divemaster app");
-            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis ());
+            values.put(MediaStore.Images.Media.DESCRIPTION, fName + " is taken from scuba divemaster app");
+            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
             values.put(MediaStore.Images.ImageColumns.BUCKET_ID, takenFile.toString().toLowerCase(Locale.GERMAN).hashCode());
             values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, takenFile.toString().toLowerCase(Locale.GERMAN).hashCode());
             values.put("_data", takenFile.getAbsolutePath());
