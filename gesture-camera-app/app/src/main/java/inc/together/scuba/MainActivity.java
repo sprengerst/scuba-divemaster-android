@@ -199,7 +199,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //if (Math.abs(last_z - z) > 2.2F) => Tilt
             //else if (Math.abs(last_y-y) > 1.3F) => horizontal shake
 
-            if ( Math.abs(last_y-y) > 3.2F){
+
+            float value1 = Math.abs(last_y-y);
+            float value2 = Math.abs(last_z-z);
+
+
+
+            if ( value1 > 3.2F && value1 > value2){
                 Log.d("MainActivity", "Shake orientation: horizontal");
 
                 mShakeEnabled = false;
@@ -216,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
 
                 countDownAnimation.start();
-            }else if (Math.abs(last_z - z) > 3.2F)  {
+            }else if (value2 > 3.2F && value2 > value1)  {
                 Log.d("MainActivity", "Shake orientation: vertical");
 
                 if (mCameraView.getFacing() == Facing.BACK) {

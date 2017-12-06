@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\git\scuba-divemaster-android\gesture-camera-app\app\app.iml" filepath="C:\git\scuba-divemaster-android\gesture-camera-app\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gesture-camera-app.iml" filepath="$PROJECT_DIR$/gesture-camera-app.iml" />
-      <module fileurl="file://C:\git\scuba-divemaster-android\gesture-camera-app\gesture-camera-app.iml" filepath="C:\git\scuba-divemaster-android\gesture-camera-app\gesture-camera-app.iml" />
     </modules>
   </component>
 </project>
